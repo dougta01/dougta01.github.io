@@ -70,25 +70,15 @@
 		}
 		
 		doneTask = function() {
-			c = this.parentNode.className;
-			if(c.length > 5 && c.substring(c.length - 5) == " done"){
-				this.parentNode.className = c.substring(0,c.length - 5);
-			}
-			else{
-				this.parentNode.className += " done"
-			}
-				
-			
-			
-			
-			
-			
-			//newList = []
-			//List = document.querySelectorAll('li')
-			//for(i=0; i< List.length; i++) {
-			//	newList.push(List[i].innerText)
-			//}
-		}
+    // this is the box that was clicked
+    if (this.checked) {
+        this.parentNode.classList.add("done");
+    } else {
+      this.parentNode.classList.remove("done");
+    }
+
+    localSave()
+}
 		
 		addTask = function() {
 			var newli;
@@ -106,7 +96,26 @@
 			task.value = "";
 			newcb.onclick = doneTask;
 		}
-			
+			localSave = function() {
+    var res = []
+    var i;
+    allEntries = document.querySelectorAll('li')
+    for(i=0; i < allEntries.length; i++) {
+        if (! allEntries[i].classList.contains("done") ) {
+            res.push(allEntries[i].innerText);
+        }
+    }
+
+    localStorage.setItem("todoDatabase",JSON.stringify(res))
+}
+
+restoreTasks = function() {
+  allTasks = JSON.parse(localStorage.getItem('todoDatabase'))
+  for(i = 0; i < allTasks.length; i++) {
+      insertTaskInTree(allTasks[i],"Medium");
+  }
+}
+
 	</script>
 	
 	<aside>
@@ -117,7 +126,7 @@
 		<option>Medium</option>
 		<option>Low</option>
 	</select> 
-    <button type="text" onClick="addTask()">ADD</button>
+    <button type="text" onClick="addTask()">Add</button>
     </aside>
     
 		<ul id = "List"></ul>
